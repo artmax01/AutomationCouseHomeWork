@@ -20,7 +20,7 @@ namespace ClassLibrary1
 			var chromeOptions = new ChromeOptions();
 			chromeOptions.AddArguments
 				(
-					"--headless",
+					//"--headless",
 					"--start-fullscreen",
 					"--start-maximized"
 				);
@@ -43,9 +43,11 @@ namespace ClassLibrary1
 			TestContext.WriteLine("Go to Leafground page");
 			driver.Navigate().GoToUrl("http://www.leafground.com/home.html");
 
+			var goToHome = By.XPath("//a[text()='Go to Home Page']");
+
 			//Open HiperLink in new tab
 			TestContext.WriteLine("Open HyperLink page in new tab");
-			new Action(driver).KeyDown(Keys.Control).Click(driver.FindElement(By.LinkText("HyperLink"))).KeyUp(Keys.Control).Perform();
+			new Actions(driver).KeyDown(Keys.Control).Click(driver.FindElement(By.LinkText("HyperLink"))).KeyUp(Keys.Control).Perform();
 
 			//Switch to second tab
 			TestContext.WriteLine("Switcn to the second tab");
@@ -53,7 +55,7 @@ namespace ClassLibrary1
 
 			//Hover on “Go to Home Page” link
 			TestContext.WriteLine("Hover on “Go to Home Page” link");
-			new Action(driver).MoveToElement(driver.FindElements(By.XPath("//a[text()='Go to Home Page']"))).First().Perform();
+			new Actions(driver).MoveToElement(driver.FindElement(goToHome)).Perform();
 
 			//Take Screenshot
 			TestContext.WriteLine("Take Screenshot");
@@ -85,12 +87,12 @@ namespace ClassLibrary1
 			dropableDemo.Click();
 
 			//Switch to frame
-			TestContext.WriteLine("Switch to frame");
-			driver.SwitchTo().Frame(driver.FindElement(By.XPath("//a[href='https://jqueryui.com/droppable/']")));
+			//TestContext.WriteLine("Switch to frame");
+			//driver.SwitchTo().Frame(driver.FindElement(By.XPath("//a[@href='https://jqueryui.com/droppable/']")));
 
 			//Drag & Drop the small box into a big one
 			TestContext.WriteLine("Drag & Drop the small box into a big one");
-			new Action(driver).DragAndDrop(driver.FindElement(By.Id("draggable")), driver.FindElement(By.Id("droppable"))).Perform();
+			new Actions(driver).DragAndDrop(driver.FindElement(By.CssSelector("#draggable")), driver.FindElement(By.CssSelector("#droppable"))).Perform();
 
 			//Verify that big box now contains text “Dropped!”
 			TestContext.WriteLine("Verify that big box now contains text “Dropped!”");
