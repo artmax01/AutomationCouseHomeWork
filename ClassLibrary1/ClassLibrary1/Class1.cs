@@ -20,7 +20,7 @@ namespace ClassLibrary1
 			var chromeOptions = new ChromeOptions();
 			chromeOptions.AddArguments
 				(
-					//"--headless",
+					"--headless",
 					"--start-fullscreen",
 					"--start-maximized"
 				);
@@ -31,7 +31,7 @@ namespace ClassLibrary1
 		[TearDown]
 		public void TearDown()
 		{
-			TestContext.WriteLine("Kill driver");
+			//TestContext.WriteLine("Kill driver");
 			driver.Quit();
 		}
 
@@ -44,10 +44,14 @@ namespace ClassLibrary1
 			driver.Navigate().GoToUrl("http://www.leafground.com/home.html");
 
 			var goToHome = By.XPath("//a[text()='Go to Home Page']");
+			var dragable = By.CssSelector("#draggable");
+			var droppable = By.CssSelector("#droppable");
+			var successTest = By.CssSelector("div#droppable p");
 
 			//Open HiperLink in new tab
 			TestContext.WriteLine("Open HyperLink page in new tab");
-			new Actions(driver).KeyDown(Keys.Control).Click(driver.FindElement(By.LinkText("HyperLink"))).KeyUp(Keys.Control).Perform();
+			new Actions(driver).KeyDown(Keys.Control)
+				.Click(driver.FindElement(By.LinkText("HyperLink"))).KeyUp(Keys.Control).Perform();
 
 			//Switch to second tab
 			TestContext.WriteLine("Switcn to the second tab");
@@ -88,15 +92,15 @@ namespace ClassLibrary1
 
 			//Switch to frame
 			//TestContext.WriteLine("Switch to frame");
-			//driver.SwitchTo().Frame(driver.FindElement(By.XPath("//a[@href='https://jqueryui.com/droppable/']")));
+			driver.SwitchTo().Frame(driver.FindElement(By.XPath("//iframe[@class='demo-frame']")));
 
 			//Drag & Drop the small box into a big one
 			TestContext.WriteLine("Drag & Drop the small box into a big one");
-			new Actions(driver).DragAndDrop(driver.FindElement(By.CssSelector("#draggable")), driver.FindElement(By.CssSelector("#droppable"))).Perform();
+			new Actions(driver).DragAndDrop(driver.FindElement(dragable), driver.FindElement(droppable)).Perform();
 
 			//Verify that big box now contains text “Dropped!”
 			TestContext.WriteLine("Verify that big box now contains text “Dropped!”");
-			Assert.That(driver.FindElement(By.CssSelector("div#droppable p")).Text, Is.EqualTo("Dropped!"));
+			Assert.That(driver.FindElement(successTest).Text, Is.EqualTo("Dropped!"));
 
 
 
